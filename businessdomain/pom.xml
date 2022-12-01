@@ -10,5 +10,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>customer</module>
+        <module>InitializrSpringbootProject</module>
     </modules>
 </project>
