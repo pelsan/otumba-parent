@@ -123,13 +123,20 @@ public class CustomerRestController {
     private String getProductName(long id) {
         WebClient build = webClientBuilder.clientConnector(new ReactorClientHttpConnector(client))
                 .baseUrl("http://localhost:8091/product")
+                // Setting headers
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .defaultUriVariables(Collections.singletonMap("url", "http://localhost:8091/product"))
                 .build();
+        
+        // Setting call get product by id
         JsonNode block = build.method(HttpMethod.GET).uri("/" + id)
                 .retrieve().bodyToMono(JsonNode.class).block();
+        
+        System.out.println("json"+ block.toPrettyString());
         String name = block.get("name").asText();
+        System.out.println("Resultad");
         return name;
+        
     }
 
 }
