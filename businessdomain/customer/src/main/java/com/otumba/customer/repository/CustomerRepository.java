@@ -9,5 +9,7 @@ import com.otumba.customer.entities.Customer;
  * @author pelsa
  */
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
+
+    public Customer findByCode(String code);
     
 }
