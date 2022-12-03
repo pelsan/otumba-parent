@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  *
- * @author peter
+ * @author peter coronel
  */
 @Configuration
 @ConfigurationProperties(prefix = "example.datasource")
