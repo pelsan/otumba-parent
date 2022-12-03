@@ -18,6 +18,15 @@ public class DemoProperties {
   private String url;
   private String username;
   private String password;
+  private String servicecheck;
+
+    public String getServicecheck() {
+        return servicecheck;
+    }
+
+    public void setServicecheck(String servicecheck) {
+        this.servicecheck = servicecheck;
+    }
 
   public String getUrl() {
     return url;

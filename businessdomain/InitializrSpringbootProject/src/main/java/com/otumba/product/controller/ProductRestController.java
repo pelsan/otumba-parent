@@ -55,6 +55,7 @@ public class ProductRestController {
         System.out.println("DB URL: " + properties.getUrl());
         System.out.println("DB Username: " + properties.getUsername());
         System.out.println("DB Password: " + properties.getPassword());
+        System.out.println("service check: " + properties.getServicecheck());
 
         return "Hello World!";
     }
@@ -63,18 +64,18 @@ public class ProductRestController {
     public String check() {
 
         WebClient build = webClientBuilder.clientConnector(new ReactorClientHttpConnector(client))
-                .baseUrl("http://run.mocky.io/v2/5185415ba171ea3a00704eed")
+                .baseUrl(properties.getServicecheck())
                 // Setting headers
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultUriVariables(Collections.singletonMap("url", "http://run.mocky.io/v2/5185415ba171ea3a00704eed"))
+                .defaultUriVariables(Collections.singletonMap("url", properties.getServicecheck()))
                 .build();
 
         // Setting call get product by id
         JsonNode block = build.method(HttpMethod.GET).uri("/")
                 .retrieve().bodyToMono(JsonNode.class).block();
-
+              
         System.out.println("json" + block.toPrettyString());
-        
+        System.out.println("parameter hello:" + block.get("hello").asText());
         return block.toPrettyString();
     }
 

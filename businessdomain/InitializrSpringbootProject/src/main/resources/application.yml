@@ -7,10 +7,13 @@ springdoc:
     enabled: true
 ---
 example:
+  servicecheck: http://run.mocky.io/v2/5185415ba171ea3a00704eed
   datasource:
     url: jdbc:mysql://localhost/example
     username: local-user
     password: local-password
+    servicecheck: http://run.mocky.io/v2/5185415ba171ea3a00704eed
+    
 
 ---
 spring:
@@ -21,3 +24,4 @@ spring:
     url: ${example.datasource.url}
     username: ${example.datasource.username}
     password: ${example.datasource.password}
+    servicecheck: http://run.mocky.io/v2/5185415ba171ea3a00704eed
