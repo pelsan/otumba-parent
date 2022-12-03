@@ -1,4 +1,6 @@
 package com.otumba.product.controller;
+
+import com.otumba.product.back.DemoProperties;
 import com.otumba.product.entities.Product;
 import com.otumba.product.repository.ProductRepository;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,43 +23,60 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RestController
 @RequestMapping("/product")
 public class ProductRestController {
-     @Autowired
+
+    @Autowired
     ProductRepository productRepository;
-    
+
+    private final DemoProperties properties;
+
+    @Autowired
+    public ProductRestController(DemoProperties properties) {
+        this.properties = properties;
+    }
+
+    @GetMapping("/hello")
+    public String hello() {
+        System.out.println("DB URL: " + properties.getUrl());
+        System.out.println("DB Username: " + properties.getUsername());
+        System.out.println("DB Password: " + properties.getPassword());
+
+        return "Hello World!";
+    }
+
     @GetMapping()
     public List<Product> list() {
         return productRepository.findAll();
     }
-    
+
     @GetMapping("/{id}")
     public Product get(@PathVariable long id) {
         return productRepository.findById(id).get();
     }
-    
+
     @PutMapping("/{id}")
     public ResponseEntity<?> put(@PathVariable long id, @RequestBody Product input) {
-      Product find = productRepository.findById(id).get();   
-        if(find != null){     
+        Product find = productRepository.findById(id).get();
+        if (find != null) {
             find.setCode(input.getCode());
             find.setName(input.getName());
         }
         Product save = productRepository.save(find);
         return ResponseEntity.ok(save);
     }
-    
+
     @PostMapping
     public ResponseEntity<?> post(@RequestBody Product input) {
         Product save = productRepository.save(input);
         return ResponseEntity.ok(save);
     }
-    
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable long id) {  
-        Optional<Product> findById = productRepository.findById(id);   
-        if(findById.get() != null){               
-                  productRepository.delete(findById.get());  
+    public ResponseEntity<?> delete(@PathVariable long id) {
+        Optional<Product> findById = productRepository.findById(id);
+        if (findById.get() != null) {
+            productRepository.delete(findById.get());
         }
         return ResponseEntity.ok().build();
     }
-    
+
 }
