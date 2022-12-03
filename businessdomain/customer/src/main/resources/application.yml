@@ -5,3 +5,23 @@ springdoc:
   swagger-ui:
     path: /swagger/index.html
     enabled: true
+---
+example:
+  servicecheck: http://localhost:8091/product/check
+  datasource:
+    url: jdbc:mysql://localhost/example
+    username: local-user
+    password: local-password
+    servicecheck: http://localhost:8091/product/check
+    
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev 
+  datasource:
+    url: ${example.datasource.url}
+    username: ${example.datasource.username}
+    password: ${example.datasource.password}
+    servicecheck: ${example.datasource.servicecheck}

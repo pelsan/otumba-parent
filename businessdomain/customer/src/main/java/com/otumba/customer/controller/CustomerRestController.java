@@ -5,9 +5,7 @@
 package com.otumba.customer.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.otumba.customer.entities.Customer;
-import com.otumba.customer.entities.CustomerProduct;
-import com.otumba.customer.repository.CustomerRepository;
+import com.otumba.customer.back.DemoProperties;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.epoll.EpollChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
@@ -16,22 +14,16 @@ import java.time.Duration;
 import java.util.Collections;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
-import java.util.List;
-import java.util.Optional;
+
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
+
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
@@ -44,11 +36,12 @@ import reactor.netty.http.client.HttpClient;
 public class CustomerRestController {
 
     @Autowired
-    CustomerRepository customerRepository;
-
     private final WebClient.Builder webClientBuilder;
 
-    public CustomerRestController(WebClient.Builder webClientBuilder) {
+    private final DemoProperties properties;
+
+    public CustomerRestController(DemoProperties properties, WebClient.Builder webClientBuilder) {
+        this.properties = properties;
         this.webClientBuilder = webClientBuilder;
     }
 
@@ -68,75 +61,33 @@ public class CustomerRestController {
                 connection.addHandlerLast(new WriteTimeoutHandler(5000, TimeUnit.MILLISECONDS));
             });
 
-    @GetMapping()
-    public List<Customer> list() {
-        return customerRepository.findAll();
+    @GetMapping("/hello")
+    public String hello() {
+        System.out.println("DB URL: " + properties.getUrl());
+        System.out.println("DB Username: " + properties.getUsername());
+        System.out.println("DB Password: " + properties.getPassword());
+        System.out.println("service check: " + properties.getServicecheck());
+
+        return "Hello World!";
     }
 
-    @GetMapping("/{id}")
-    public Customer get(@PathVariable long id) {
-        return customerRepository.findById(id).get();
-    }
+        @GetMapping("/check")
+    public String check() {
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> put(@PathVariable long id, @RequestBody Customer input) {
-        Customer find = customerRepository.findById(id).get();
-        if (find != null) {
-            find.setCode(input.getCode());
-            find.setName(input.getName());
-            find.setIban(input.getIban());
-            find.setPhone(input.getPhone());
-            find.setSurname(input.getSurname());
-        }
-        Customer save = customerRepository.save(find);
-        return ResponseEntity.ok(save);
-    }
-
-    @PostMapping
-    public ResponseEntity<?> post(@RequestBody Customer input) {
-        input.getProducts().forEach(x -> x.setCustomer(input));
-        Customer save = customerRepository.save(input);
-        return ResponseEntity.ok(save);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable long id) {
-        Optional<Customer> findById = customerRepository.findById(id);
-        if (findById.get() != null) {
-            customerRepository.delete(findById.get());
-        }
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/full")
-    public Customer getByCode(@RequestParam String code) {
-        Customer customer = customerRepository.findByCode(code);
-        List<CustomerProduct> products = customer.getProducts();
-        products.forEach(x -> {
-            String productName = getProductName(x.getId());
-            x.setProductName(productName);
-        });
-        return customer;
-
-    }
-
-    private String getProductName(long id) {
         WebClient build = webClientBuilder.clientConnector(new ReactorClientHttpConnector(client))
-                .baseUrl("http://localhost:8091/product")
+                .baseUrl(properties.getServicecheck())
                 // Setting headers
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultUriVariables(Collections.singletonMap("url", "http://localhost:8091/product"))
+                .defaultUriVariables(Collections.singletonMap("url", properties.getServicecheck()))
                 .build();
-        
+
         // Setting call get product by id
-        JsonNode block = build.method(HttpMethod.GET).uri("/" + id)
+        JsonNode block = build.method(HttpMethod.GET).uri("/")
                 .retrieve().bodyToMono(JsonNode.class).block();
-        
-        System.out.println("json"+ block.toPrettyString());
-        String name = block.get("name").asText();
-        System.out.println("Resultad");
-        return name;
-        
+              
+        System.out.println("json" + block.toPrettyString());
+        System.out.println("parameter hello:" + block.get("hello").asText());
+        return block.toPrettyString();
     }
 
 }
