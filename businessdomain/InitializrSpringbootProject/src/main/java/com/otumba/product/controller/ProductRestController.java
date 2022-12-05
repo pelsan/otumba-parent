@@ -63,7 +63,11 @@ public class ProductRestController {
     }
 
     @GetMapping("/check")
-    public String check() {
+    public String check(@RequestHeader Map<String, String> headers) {
+
+        headers.forEach((key, value) -> {
+            System.out.println(String.format("Header '%s' = %s", key, value));
+        });
 
         WebClient build = webClientBuilder.clientConnector(new ReactorClientHttpConnector(client))
                 .baseUrl(properties.getServicecheck())
