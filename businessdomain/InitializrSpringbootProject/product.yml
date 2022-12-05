@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bd-product
+spec:
+  selector:
+    matchLabels:
+      app: bd-product
+  replicas: 1
+  template: # template for the pods
+    metadata:
+      labels:
+        app: bd-product
+    spec:
+      containers:
+        - name: bd-product
+          image: pelsan/otumbaparent-product:latest
+          env:
+            - name: SPRING_PROFILE
+              value: dev
+            - name: SPRING_APPLICATION_JSON
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-config-product
+                  key: dev-config.json
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bd-product-service
+spec:
+  selector:
+    app: bd-product
+  ports:
+    - name: http
+      port: 8091
+      nodePort: 31091
+  type: NodePort

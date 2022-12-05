@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spring-config-product
+data:
+  dev-config.json:
+    '{
+      "example.datasource.url": "jdbc:mysql://dev-endpoint-otumba/example",
+      "example.datasource.username": "dev-root-otumba",
+      "example.datasource.password": "dev-pass-otumba",
+      "example.datasource.servicecheck": "http://run.mocky.io/v2/5185415ba171ea3a00704eed"
+     }'

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bd-customer
+spec:
+  selector:
+    matchLabels:
+      app: bd-customer
+  replicas: 1
+  template: # template for the pods
+    metadata:
+      labels:
+        app: bd-customer
+    spec:
+      containers:
+        - name: bd-customer
+          image: pelsan/otumbaparent-customer:latest
+          env:
+            - name: SPRING_PROFILE
+              value: dev
+            - name: SPRING_APPLICATION_JSON
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-config-customer
+                  key: dev-config.json
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bd-customer-service
+spec:
+  selector:
+    app: bd-customer
+  ports:
+    - name: http
+      port: 8090
+      nodePort: 31090
+  type: NodePort

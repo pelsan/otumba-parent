@@ -24,4 +24,4 @@ spring:
     url: ${example.datasource.url}
     username: ${example.datasource.username}
     password: ${example.datasource.password}
-    servicecheck: http://run.mocky.io/v2/5185415ba171ea3a00704eed
+    servicecheck: ${example.datasource.servicecheck}
