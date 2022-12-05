@@ -35,5 +35,4 @@ spec:
   ports:
     - name: http
       port: 8091
-      nodePort: 31091
-  type: NodePort
+  type: ClusterIP
