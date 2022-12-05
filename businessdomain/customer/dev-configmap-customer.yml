@@ -8,5 +8,5 @@ data:
       "example.datasource.url": "jdbc:mysql://dev-endpoint-otumba/example",
       "example.datasource.username": "dev-root-otumba",
       "example.datasource.password": "dev-pass-otumba",
-      "example.datasource.servicecheck": "http://bd-product-service:31091/product"
+      "example.datasource.servicecheck": "http://bd-product-service:8091/product"
      }'
