@@ -1,4 +1,4 @@
-FROM openjdk:17
+FROM openjdk:17.0.1-jdk-oracle
 ENV JAVA_OPTS=""
 ARG JAR_FILE
 ADD ${JAR_FILE} app.jar
