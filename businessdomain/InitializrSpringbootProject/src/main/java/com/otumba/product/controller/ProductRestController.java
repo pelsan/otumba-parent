@@ -13,6 +13,7 @@ import java.util.Collections;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
@@ -73,7 +75,7 @@ public class ProductRestController {
         // Setting call get product by id
         JsonNode block = build.method(HttpMethod.GET).uri("/")
                 .retrieve().bodyToMono(JsonNode.class).block();
-              
+
         System.out.println("json" + block.toPrettyString());
         System.out.println("parameter hello:" + block.get("hello").asText());
         return block.toPrettyString();
@@ -101,7 +103,10 @@ public class ProductRestController {
     }
 
     @GetMapping("/{id}")
-    public Product get(@PathVariable long id) {
+    public Product get(@PathVariable long id, @RequestHeader Map<String, String> headers) {
+        headers.forEach((key, value) -> {
+            System.out.println(String.format("Header '%s' = %s", key, value));
+        });
         return productRepository.findById(id).get();
     }
 

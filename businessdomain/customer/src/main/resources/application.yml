@@ -7,12 +7,11 @@ springdoc:
     enabled: true
 ---
 example:
-  servicecheck: http://localhost:8091/product/check
   datasource:
     url: jdbc:mysql://localhost/example
     username: local-user
     password: local-password
-    servicecheck: http://localhost:8091/product/check
+    servicecheck: http://localhost:8091/product
     
 
 ---

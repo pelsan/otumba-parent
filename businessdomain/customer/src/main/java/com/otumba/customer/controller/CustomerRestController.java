@@ -12,6 +12,8 @@ import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import java.time.Duration;
 import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Map;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -22,7 +24,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.bind.annotation.GetMapping;
-
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
@@ -71,8 +73,12 @@ public class CustomerRestController {
         return "Hello World!";
     }
 
-        @GetMapping("/check")
-    public String check() {
+    @GetMapping("/check")
+    public String check(@RequestHeader Map<String, String> headers) {
+
+        headers.forEach((key, value) -> {
+            System.out.println(String.format("Header '%s' = %s", key, value));
+        });
 
         WebClient build = webClientBuilder.clientConnector(new ReactorClientHttpConnector(client))
                 .baseUrl(properties.getServicecheck())
@@ -82,11 +88,11 @@ public class CustomerRestController {
                 .build();
 
         // Setting call get product by id
-        JsonNode block = build.method(HttpMethod.GET).uri("/")
+        JsonNode block = build.method(HttpMethod.GET).uri("/1")
                 .retrieve().bodyToMono(JsonNode.class).block();
-              
+
         System.out.println("json" + block.toPrettyString());
-        System.out.println("parameter hello:" + block.get("hello").asText());
+        System.out.println("parameter hello:" + block.get("name").asText());
         return block.toPrettyString();
     }
 
