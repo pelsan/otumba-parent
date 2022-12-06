@@ -54,7 +54,7 @@ public class ProductRestController {
 
     @GetMapping("/hello")
     public String hello(@RequestHeader Map<String, String> headers) {
-        
+
         headers.forEach((key, value) -> {
             System.out.println(String.format("Header '%s' = %s", key, value));
         });
@@ -71,7 +71,7 @@ public class ProductRestController {
     public String check(@RequestHeader Map<String, String> headers) {
 
         headers.forEach((key, value) -> {
-            System.out.println(String.format("Header '%s' = %s", key, value));
+            System.out.println(String.format("check: Header '%s' = %s", key, value));
         });
 
         WebClient build = webClientBuilder.clientConnector(new ReactorClientHttpConnector(client))
@@ -131,7 +131,11 @@ public class ProductRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> post(@RequestBody Product input) {
+    public ResponseEntity<?> post(@RequestBody Product input, @RequestHeader Map<String, String> headers) {
+        headers.forEach((key, value) -> {
+            System.out.println(String.format("post: Header '%s' = %s", key, value));
+        });
+
         Product save = productRepository.save(input);
         return ResponseEntity.ok(save);
     }
