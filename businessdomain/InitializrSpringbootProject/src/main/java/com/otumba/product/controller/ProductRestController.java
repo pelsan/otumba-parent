@@ -53,7 +53,12 @@ public class ProductRestController {
     }
 
     @GetMapping("/hello")
-    public String hello() {
+    public String hello(@RequestHeader Map<String, String> headers) {
+        
+        headers.forEach((key, value) -> {
+            System.out.println(String.format("Header '%s' = %s", key, value));
+        });
+
         System.out.println("DB URL: " + properties.getUrl());
         System.out.println("DB Username: " + properties.getUsername());
         System.out.println("DB Password: " + properties.getPassword());

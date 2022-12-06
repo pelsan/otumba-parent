@@ -13,6 +13,7 @@ import io.netty.handler.timeout.WriteTimeoutHandler;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.reactive.function.BodyInserters;
 
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
@@ -89,6 +91,34 @@ public class CustomerRestController {
 
         // Setting call get product by id
         JsonNode block = build.method(HttpMethod.GET).uri("/1")
+                .retrieve().bodyToMono(JsonNode.class).block();
+
+        System.out.println("json" + block.toPrettyString());
+        System.out.println("parameter hello:" + block.get("name").asText());
+        return block.toPrettyString();
+    }
+
+    @GetMapping("/preparecheck")
+    public String preparecheck(@RequestHeader Map<String, String> headers) {
+
+        Map<String, String> bodyMap = new HashMap();
+        bodyMap.put("name", "Product 000");
+        bodyMap.put("code", "000");
+
+        headers.forEach((key, value) -> {
+            System.out.println(String.format("Header '%s' = %s", key, value));
+        });
+
+        WebClient build = webClientBuilder.clientConnector(new ReactorClientHttpConnector(client))
+                .baseUrl(properties.getServicecheck())
+                // Setting headers
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultUriVariables(Collections.singletonMap("url", properties.getServicecheck()))
+                .build();
+
+        // Setting call get product by id
+        JsonNode block = build.method(HttpMethod.POST).uri("")
+                .body(BodyInserters.fromValue(bodyMap))
                 .retrieve().bodyToMono(JsonNode.class).block();
 
         System.out.println("json" + block.toPrettyString());
