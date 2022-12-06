@@ -107,6 +107,10 @@ public class CustomerRestController {
 
         headers.forEach((key, value) -> {
             System.out.println(String.format("Header '%s' = %s", key, value));
+            if (key.startsWith("x-")){
+                System.out.println("added");
+            }
+            
         });
 
         WebClient build = webClientBuilder.clientConnector(new ReactorClientHttpConnector(client))
@@ -119,6 +123,7 @@ public class CustomerRestController {
         // Setting call get product by id
         JsonNode block = build.method(HttpMethod.POST).uri("")
                 .body(BodyInserters.fromValue(bodyMap))
+          //      .headers(headersConsumer)
                 .retrieve().bodyToMono(JsonNode.class).block();
 
         System.out.println("json" + block.toPrettyString());
