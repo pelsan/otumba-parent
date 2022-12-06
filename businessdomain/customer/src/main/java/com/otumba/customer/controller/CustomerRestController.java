@@ -10,6 +10,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.epoll.EpollChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
+import io.netty.util.internal.shaded.org.jctools.queues.MessagePassingQueue.Consumer;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -104,14 +105,7 @@ public class CustomerRestController {
         Map<String, String> bodyMap = new HashMap();
         bodyMap.put("name", "Product 000");
         bodyMap.put("code", "000");
-
-        headers.forEach((key, value) -> {
-            System.out.println(String.format("Header '%s' = %s", key, value));
-            if (key.startsWith("x-")){
-                System.out.println("added");
-            }
-            
-        });
+       
 
         WebClient build = webClientBuilder.clientConnector(new ReactorClientHttpConnector(client))
                 .baseUrl(properties.getServicecheck())
@@ -119,16 +113,30 @@ public class CustomerRestController {
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .defaultUriVariables(Collections.singletonMap("url", properties.getServicecheck()))
                 .build();
-
+//getHttpHeadersFromExchange(exchange);
         // Setting call get product by id
         JsonNode block = build.method(HttpMethod.POST).uri("")
                 .body(BodyInserters.fromValue(bodyMap))
-          //      .headers(headersConsumer)
+                .headers(
+                        httpHeaders -> {
+
+                            httpHeaders.set("key1", "value1");
+                            httpHeaders.set("key2", "value2");
+                            headers.forEach((key, value) -> {
+                                System.out.println(String.format("Header '%s' = %s", key, value));
+                                if (key.startsWith("x-")) {
+                                    httpHeaders.set(key, value);
+                                    System.out.println("added");
+                                }
+                            }
+                            );
+                        }
+                )
                 .retrieve().bodyToMono(JsonNode.class).block();
 
-        System.out.println("json" + block.toPrettyString());
-        System.out.println("parameter hello:" + block.get("name").asText());
-        return block.toPrettyString();
-    }
+                            System.out.println("json" + block.toPrettyString());
+                            System.out.println("parameter hello:" + block.get("name").asText());
+                            return block.toPrettyString();
+                        }
 
-}
+    }
