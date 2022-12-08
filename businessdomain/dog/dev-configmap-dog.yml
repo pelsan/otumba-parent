@@ -9,8 +9,8 @@ data:
       "example.datasource.url": "jdbc:postgresql://postgres-service:5432/postgres",
       "example.datasource.username": "postgres",
       "example.datasource.password": "qwerty",
-      "example.datasource.servicecheck": "http://bd-product-service:8091/product"
-      "example.datasource.dialect": "org.hibernate.dialect.PostgreSQLDialect"
-      "example.datasource.ddl-auto": "create-drop"
+      "example.datasource.servicecheck": "http://bd-product-service:8091/product",
+      "example.datasource.dialect": "org.hibernate.dialect.PostgreSQLDialect",
+      "example.datasource.ddl-auto": "create-drop",
       "example.datasource.show-sql": "true"
      }'
