@@ -13,5 +13,6 @@
         <module>InitializrSpringbootProject</module>
         <module>mavenproject2</module>
         <module>simpleservice</module>
+        <module>dog</module>
     </modules>
 </project>
