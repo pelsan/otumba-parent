@@ -14,5 +14,6 @@
         <module>mavenproject2</module>
         <module>simpleservice</module>
         <module>dog</module>
+        <module>mdb-spring-boot</module>
     </modules>
 </project>
