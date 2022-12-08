@@ -6,8 +6,8 @@ data:
   dev-config.json:
     '{
     
-      "example.datasource.url": "jdbc:postgresql://postgres-service:5432/postgres",
-      "example.datasource.username": "postgres",
+      "example.datasource.url": "jdbc:postgresql://postgres-service:5432/microservices_db",
+      "example.datasource.username": "microsrvapp",
       "example.datasource.password": "qwerty",
       "example.datasource.servicecheck": "http://bd-product-service:8091/product",
       "example.datasource.dialect": "org.hibernate.dialect.PostgreSQLDialect",

@@ -7,8 +7,10 @@ data:
    #!/bin/bash
    set -e
    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
-    CREATE USER billingapp WITH PASSWORD 'qwerty' SUPERUSER;
-    CREATE DATABASE billingapp_db;
-    GRANT ALL PRIVILEGES ON DATABASE billingapp_db TO billingapp;
-    GRANT ALL PRIVILEGES ON DATABASE database_name TO username;
+    CREATE USER microsrvapp WITH PASSWORD 'qwerty' SUPERUSER;
+    CREATE DATABASE microservices_db;
+    GRANT ALL PRIVILEGES ON DATABASE microservices_db TO microsrvapp;
+    CREATE USER keycloakapp WITH PASSWORD 'qwerty' SUPERUSER;
+    CREATE DATABASE keycloak_db;
+    GRANT ALL PRIVILEGES ON DATABASE keycloak_db TO keycloakapp;
    EOSQL
