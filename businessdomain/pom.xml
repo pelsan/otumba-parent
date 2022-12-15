@@ -15,5 +15,6 @@
         <module>simpleservice</module>
         <module>dog</module>
         <module>mdb-spring-boot</module>
+        <module>reports</module>
     </modules>
 </project>
