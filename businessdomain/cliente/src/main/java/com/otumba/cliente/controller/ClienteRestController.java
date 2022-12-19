@@ -4,7 +4,12 @@
  */
 package com.otumba.cliente.controller;
 
+import com.otumba.cliente.entities.Cliente;
+import com.otumba.cliente.services.IClienteService;
+import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,8 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author peter
  */
+
+// va a permitir a la aplicacion angular conectarse al servicio
+@CrossOrigin(origins={"http://localhost:4200"})
 @RestController
-@RequestMapping("/dog")
+@RequestMapping("/cliente")
 public class ClienteRestController {
 
     @GetMapping("/test")
@@ -24,5 +32,13 @@ public class ClienteRestController {
             System.out.println(String.format("Header '%s' = %s", key, value));
         });
         return "OK";
+    }
+
+    @Autowired
+    private IClienteService clienteService;
+
+    @GetMapping("/clientes")
+    public List<Cliente> index() {
+           return clienteService.findAll();
     }
 }
