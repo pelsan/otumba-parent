@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -32,4 +33,9 @@ public class Cliente {
     @Column(name="create_at")
     @Temporal(TemporalType.DATE)
     private Date createAt;
+    
+    @PrePersist
+    public void prePersist(){
+        createAt = new Date();
+    }
 }

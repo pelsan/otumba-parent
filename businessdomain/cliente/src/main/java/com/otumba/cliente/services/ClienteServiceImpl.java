@@ -27,4 +27,20 @@ public class ClienteServiceImpl implements IClienteService {
         return (List<Cliente>) clienteDao.findAll();
     }
 
+    @Override
+    public Cliente findById(Long id){
+        // si lo encuentra retorna el objeto, si no retorna un null
+        return clienteDao.findById(id).orElse(null);
+        
+    }
+
+    @Override
+    public Cliente save(Cliente cliente) {
+        return clienteDao.save(cliente);
+    }
+
+    @Override
+    public void delete(Long id) {
+        clienteDao.deleteById(id);
+    }
 }
