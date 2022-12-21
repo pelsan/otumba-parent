@@ -25,9 +25,12 @@ public class Cliente {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     
-    
+    @Column(nullable=false)
     private String nombre;
     private String apellido;
+    
+    // no puede ser nulo y el correo no se puede duplicar
+    @Column(nullable=false, unique=true)
     private String email;
     
     @Column(name="create_at")

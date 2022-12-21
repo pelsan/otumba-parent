@@ -74,14 +74,24 @@ public class ClienteRestController {
     }
 
     @PostMapping("/clientes")
-    // por default contesta 200 pero en este caso queremos responder un codigo 201
-    @ResponseStatus(HttpStatus.CREATED)
-    public Cliente create(@RequestBody Cliente cliente) {
-        // lo siguiente se puede poner para asignar fecha pero mejor se va a asignar al prepersistir dentro de el entity
-        // en la clase cliente
-        // cliente.setCreateAt(new Date());
+    public ResponseEntity<?> create(@RequestBody Cliente cliente) {
 
-        return clienteService.save(cliente);
+        Cliente clienteNew = null;
+        Map<String, Object> response = new HashMap<>();
+        try {
+            clienteNew = clienteService.save(cliente);
+            
+        } catch (DataAccessException e) {
+            response.put("mensaje", "Error al realizar el insert la base de datos");
+            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+        response.put("mensaje", "El cliente ha sido creado con exito");
+        response.put("cliente", clienteNew);
+        
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+
     }
 
     @PutMapping("/clientes/{id}")
