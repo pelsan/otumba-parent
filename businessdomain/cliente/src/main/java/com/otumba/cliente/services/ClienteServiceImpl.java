@@ -9,6 +9,8 @@ import com.otumba.cliente.repository.ClienteRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,6 +29,12 @@ public class ClienteServiceImpl implements IClienteService {
         return (List<Cliente>) clienteDao.findAll();
     }
 
+    
+    @Override
+    public Page<Cliente> findAll(Pageable pageable) {
+        return clienteDao.findAll(pageable); 
+    }
+    
     @Override
     public Cliente findById(Long id){
         // si lo encuentra retorna el objeto, si no retorna un null
@@ -43,4 +51,5 @@ public class ClienteServiceImpl implements IClienteService {
     public void delete(Long id) {
         clienteDao.deleteById(id);
     }
+
 }
