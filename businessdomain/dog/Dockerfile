@@ -1,5 +1,5 @@
-FROM openjdk:17.0.1-jdk-oracle
-#FROM openjdk:21-ea-10-jdk-slim
+#FROM openjdk:17.0.1-jdk-oracle
+FROM openjdk:21-ea-10-jdk-slim
 ENV JAVA_OPTS=""
 ARG JAR_FILE
 ADD ${JAR_FILE} app.jar
